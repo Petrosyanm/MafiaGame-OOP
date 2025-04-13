@@ -12,12 +12,12 @@ public class Black extends Player{
     }
 
     //Setters and Getters
-    public boolean setMessageVisibility(){
-
+    public void setMessageVisibility(){
+        messageVisibility = !messageVisibility;
     }
 
-    private void getMessageVisibility(){
-
+    private boolean getMessageVisibility(){
+        return messageVisibility;
     }
 
     //Functionality

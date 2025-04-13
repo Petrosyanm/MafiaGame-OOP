@@ -3,12 +3,14 @@ package game;
 import game.player.Player;
 
 public class Game{
+    //Instance Variables
     private int nights;
     private int redsNumber;
     private int blacksNumber;
     private Player[] players;
     private int talkingTurn;
 
+    //Constructors
     public Game(){
         nights = 0;
         redsNumber = 7;
@@ -37,34 +39,7 @@ public class Game{
         talkingTurn = 0;
     }
 
-    public boolean checkWinner(){
-
-    }
-
-    public boolean isGameOver(){
-
-    }
-
-    public String checkRole(int playerNumber){
-
-    }
-
-    public int changeTurn(int playerNumber){
-
-    }
-
-    public int checkTurn(int playerNumber){
-
-    }
-
-    public void decideVictim(){
-
-    }
-
-    public void distributeRoles(){
-
-    }
-
+    //Getters and Setters
     public void setNights(){
 
     }
@@ -102,6 +77,35 @@ public class Game{
     }
 
     public int getTalkingTurn(){
+
+    }
+    
+    //Functionality
+    public boolean checkWinner(){
+
+    }
+
+    public boolean isGameOver(){
+
+    }
+
+    public String checkRole(int playerNumber){
+
+    }
+
+    public int changeTurn(int playerNumber){
+
+    }
+
+    public int checkTurn(int playerNumber){
+
+    }
+
+    public void decideVictim(){
+
+    }
+
+    public void distributeRoles(){
 
     }
 }
