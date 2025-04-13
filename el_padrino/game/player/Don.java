@@ -4,15 +4,12 @@ public class Don extends Black{
 
     //Constructors
     public Don(){
-
+        super();
     }
-
-    public Don(Don that){
-
-    }
-
-    //Functionality
+//Functionality
     public boolean findSherif(int playerNumber){
+        if(playerNumber == ){
 
+        }
     }
 }

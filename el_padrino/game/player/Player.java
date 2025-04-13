@@ -10,13 +10,23 @@ public class Player {
 
     //Constructors
     public Player(int number){
-        
+        this.number = number;
+        isAlive = true;
+        remarksNumber = 0;
+        voteNumber = 0;
+        message = null;
     }
     public Player(Player that){
-        
+        this.number = that.number;
+        this.isAlive = that.isAlive;
+        this.remarksNumber = that.remarksNumber;
+        this.voteNumber = that.voteNumber;
+        this.message = that.message;
     }
     
     //Setters
+    //Setting the player's number
+    public void setNumber(int number) { this.number = number; }
     //Setting the number of remarks
     public void setRemarksNumber(int remarksNumber){
         this.remarksNumber = remarksNumber;
@@ -31,6 +41,8 @@ public class Player {
     }
 
     //Getters
+    //Getting the player's number
+    public int getNumber(){ return number; }
     //Getting the number of remarks
     public int getRemarksNumber(){
         return remarksNumber;
@@ -40,7 +52,6 @@ public class Player {
         return voteNumber;
     }
     //Getting the status of the player(dead or alive)
-
     public boolean isAlive() {
         return isAlive;
     }

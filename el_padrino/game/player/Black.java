@@ -7,11 +7,8 @@ public class Black extends Player{
 
     //Constructors
     public Black(){
-
-    }
-
-    public Black(Black that){
-
+        super();
+        messageVisibility = false;
     }
 
     //Setters and Getters

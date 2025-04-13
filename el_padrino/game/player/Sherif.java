@@ -7,11 +7,8 @@ public class Sherif extends Player{
 
     //Constructors
     public Sherif(){
-
-    }
-
-    public Sherif(Sherif that){
-
+        super();
+        messageVisibility = false;
     }
 
     //Setters and Getters
