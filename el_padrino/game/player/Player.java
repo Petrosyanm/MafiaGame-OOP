@@ -1,6 +1,7 @@
 package game.player;
 
 public class Player {
+    public static int PLAYERS_NUMBER;
     //Instance variables
     private int number;
     private int remarksNumber;
@@ -10,13 +11,23 @@ public class Player {
 
     //Constructors
     public Player(int number){
+        PLAYERS_NUMBER++;
         this.number = number;
         isAlive = true;
         remarksNumber = 0;
         voteNumber = 0;
         message = null;
     }
+    public Player(){
+        PLAYERS_NUMBER++;
+        number = PLAYERS_NUMBER;
+        isAlive = true;
+        remarksNumber = 0;
+        voteNumber = 0;
+        message = null;
+    }
     public Player(Player that){
+        PLAYERS_NUMBER++;
         this.number = that.number;
         this.isAlive = that.isAlive;
         this.remarksNumber = that.remarksNumber;
