@@ -11,7 +11,6 @@ public class User{
     //Constructors
     public User(){
         USERS_NUMBER++;
-
         ID = USERS_NUMBER + "";
         password = "12345678";
         name = "User-" + ID;
@@ -32,27 +31,27 @@ public class User{
         this.points = that.points;
     }
     //Setters and Getters
-    public void setName(){
-
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
     }
 
-    public String getName(){
-
+    public void setPoints(int points) {
+        this.points = points;
+    }
+    public int getPoints() {
+        return points;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    private String getPassword() {
+        return password;
     }
 
-    public void setPoints(){
-
-    }
-
-    public int getPoints(){
-
-    }
-
-    public void setPassword(){
-
-    }
-
-    private int getPassword(){
-
-    }
+    public String toString() {
+        return ID + "|" + name + "|" + password + "|" + points;
+    }   
 }
