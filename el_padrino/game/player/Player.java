@@ -5,6 +5,7 @@ public class Player implements Cloneable{
     //Instance variables
     private int number;
     private int remarksNumber;
+    private boolean canSpeak = true;
     private boolean isAlive;
     private int voteNumber;
     private String message;
@@ -44,15 +45,30 @@ public class Player implements Cloneable{
         }
     }
 
-    //Setters
+    // Getters and Setters
+
     //Setting the player's number
     public void setNumber(int number) {
         this.number = number;
     }
 
+    //Getting the player's number
+    public int getNumber(){
+        return number;
+
+    }
+
     //Setting the number of remarks
     public void setRemarksNumber(int remarksNumber){
         this.remarksNumber = remarksNumber;
+
+        if(remarksNumber == 2) setCanSpeak(false);
+        else if(remarksNumber >= 3) setIsAlive(false);
+    }
+
+    //Getting the number of remarks
+    public int getRemarksNumber(){
+        return remarksNumber;
     }
 
     //Setting the number of votes
@@ -60,29 +76,29 @@ public class Player implements Cloneable{
         this.voteNumber = voteNumber;
     }
 
-    //Setting the status of the player(dead or alive)
-    public void setIsAlive(boolean isAlive){
-        this.isAlive = isAlive;
-    }
-
-    //Getters
-    //Getting the player's number
-    public int getNumber(){
-        return number;
-
-    }
-    //Getting the number of remarks
-    public int getRemarksNumber(){
-        return remarksNumber;
-    }
-
     //Getting the number of votes
     public int getVoteNumber(){
         return voteNumber;
     }
 
+    //Setting the status of the player(dead or alive)
+    public void setIsAlive(boolean isAlive){
+        this.isAlive = isAlive;
+    }
+
     //Getting the status of the player(dead or alive)
     public boolean isAlive() {
         return isAlive;
+    }
+
+    // Setting if the player can speak
+    public void setCanSpeak(boolean canSpeak){
+        this.canSpeak = canSpeak;
+    }
+
+
+    // Getting if the player can speak, e.g. whether the number of remarks reach 3
+    public boolean canSpeak(){
+        return canSpeak;
     }
 }

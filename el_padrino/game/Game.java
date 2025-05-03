@@ -80,7 +80,22 @@ public class Game implements Cloneable{
     }
 
     public void setTalkingTurn(){
+        int turn = getTalkingTurn();
+        int nextTurn = (turn + 1) % players.length;
 
+        while(nextTurn != turn){
+            if(players[nextTurn].isAlive() && players[nextTurn].canSpeak()){
+                talkingTurn = nextTurn;
+                return;
+            }
+
+            nextTurn = (nextTurn + 1) % players.length;
+        }
+    }
+
+    // For saying last words after being killed
+    public void setTalkingTurn(int talkingTurn){
+        this.talkingTurn = talkingTurn;
     }
 
     public int getTalkingTurn(){
@@ -101,10 +116,6 @@ public class Game implements Cloneable{
     }
 
     public String checkRole(int playerNumber){
-
-    }
-
-    public int changeTurn(int playerNumber){
 
     }
 
