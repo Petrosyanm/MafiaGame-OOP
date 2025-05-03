@@ -2,7 +2,7 @@ package game;
 
 import game.player.Player;
 
-public class Game{
+public class Game implements Cloneable{
     //Instance Variables
     private int nights;
     private int redsNumber;
@@ -27,7 +27,7 @@ public class Game{
 
         this.players = new Player[that.players.length];
         for(int i = 0; i < players.length; i++){
-            players[i] = new Player(that.players[i]);
+            players[i] = that.players[i].clone();
         }
     }
 
@@ -69,7 +69,12 @@ public class Game{
     }
 
     public Player[] getPlayers() {
+        Player[] playersCopy = new Player[players.length];
+        for(int i = 0; i < players.length; i++){
+            playersCopy[i] = players[i].clone();
+        }
 
+        return playersCopy;
     }
 
     public void setTalkingTurn(){
