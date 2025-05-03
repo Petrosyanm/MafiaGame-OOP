@@ -21,7 +21,10 @@ public class Black extends Player{
     }
 
     //Functionality
-    public void killPlayer(int playerNumber){
-
+    public void killPlayer(int playerNumber, Player[] players){
+//      TODO: Prevented self-voting / self-killing
+        if(playerNumber >= 0 && playerNumber < players.length && players[playerNumber].isAlive() && playerNumber != this.getNumber()){
+            players[playerNumber].setVoteNumber(players[playerNumber].getVoteNumber() + 1);
+        }
     }
 }

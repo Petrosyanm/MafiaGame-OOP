@@ -2,6 +2,8 @@ package game;
 
 import game.player.Player;
 
+import java.util.ArrayList;
+
 public class Game implements Cloneable{
     //Instance Variables
     private int nights;
@@ -94,6 +96,10 @@ public class Game implements Cloneable{
 
     }
 
+    public void distributeRoles(){
+
+    }
+
     public String checkRole(int playerNumber){
 
     }
@@ -106,11 +112,35 @@ public class Game implements Cloneable{
 
     }
 
-    public void decideVictim(){
+//    TODO: Maybe we should return the index of the player and not the player itself
+    public Player decideVictim(){
+        int maxVotes = 0;
+        ArrayList<Player> candidates = new ArrayList<>();
 
+        for(Player player : players){
+            int votes = player.getVoteNumber();
+
+            if(votes > maxVotes){
+                maxVotes = votes;
+                candidates.clear();
+                candidates.add(player);
+            }
+            else if(votes == maxVotes){
+                candidates.add(player);
+            }
+        }
+
+        clearVotes();
+
+        if(candidates.size() == 1) return candidates.get(0);
+
+        // If more than one player has the highest votes or everyone has 0 vote, no one is killed; voting / killing should be repeated elsewhere based on this null return
+        else return null;
     }
 
-    public void distributeRoles(){
-
+    public void clearVotes(){
+        for(Player player : players){
+            player.setVoteNumber(0);
+        }
     }
 }
