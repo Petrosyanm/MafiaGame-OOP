@@ -6,13 +6,11 @@ public class Sherif extends Player{
 
     //Instance variables
     private boolean messageVisibility;
-    private Game game;
 
     //Constructors
-    public Sherif(Game game){
+    public Sherif(){
         super();
         messageVisibility = false;
-        this.game = game;
     }
 
     //Setters and Getters
@@ -25,7 +23,7 @@ public class Sherif extends Player{
     }
 
     // Functionality
-    public boolean findDon(int playerNumber){
-        return game.getPlayers()[playerNumber] instanceof Don;
+    public boolean findDon(int playerNumber, Player[] players){
+        return players[playerNumber] instanceof Don;
     }
 }
