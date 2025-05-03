@@ -1,9 +1,13 @@
+package gui;
+
 import user.*;
+import java.io.*;
 import javax.swing.*;
 import java.awt.*;
 
 public class RegisterLogIn {
-    public static void main(String[] args) {
+    private boolean showLoginWindow = false;
+    public void startRegistration(){
         JFrame frame = new JFrame("Login Page");
         frame.setSize(400, 250); 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,7 +45,7 @@ public class RegisterLogIn {
         createNewAccount.addActionListener(e -> createAccount(user.getText(),String.valueOf(password.getPassword()),frame));
         logIn.addActionListener(e -> logIn(user.getText(),String.valueOf(password.getPassword()),frame));
     }
-    private static void createAccount(String username, String userPassword, JFrame frame){
+    private void createAccount(String username, String userPassword, JFrame frame){
         if (username.isEmpty() || userPassword.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Please enter both username and password.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -50,11 +54,12 @@ public class RegisterLogIn {
             User user = new User(username, userPassword);
             UserDataManaging.saveUser(user); 
             JOptionPane.showMessageDialog(frame, "Account created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            showLoginWindow=true;
         } catch (LogInRegisterException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    private static void logIn(String username, String userPassword, JFrame frame){
+    private void logIn(String username, String userPassword, JFrame frame){
         if (username.isEmpty() || userPassword.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Please enter both username and password.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -63,9 +68,13 @@ public class RegisterLogIn {
             User user = new User(username, userPassword);
             UserDataManaging.logIn(username,userPassword); 
             JOptionPane.showMessageDialog(frame, "You logged in successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            showLoginWindow=true;
         } catch (LogInRegisterException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        } 
+    }
+    public boolean getShowLoginWindow(){
+        return showLoginWindow;
     }
 }
 

@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class UserDataManaging {
-    private static final String PATH_TO_DATA = "user/usersInfo.txt"; 
+    private static final String PATH_TO_DATA = "../../user/usersInfo.txt"; 
 
     public static void saveUser(User user) throws LogInRegisterException {
         if (userExists(user.getName()))
@@ -32,11 +32,12 @@ public class UserDataManaging {
                             return;
                         else 
                             throw new LogInRegisterException("Wrong password");
-                    }
                 }
+            }
             throw new LogInRegisterException("User not found. Wrong username");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            throw new LogInRegisterException("Data not found");
         }
     }
 
@@ -51,7 +52,7 @@ public class UserDataManaging {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return false;
     }
