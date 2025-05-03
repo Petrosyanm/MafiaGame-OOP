@@ -79,19 +79,6 @@ public class Game implements Cloneable{
         return playersCopy;
     }
 
-    public void setTalkingTurn(){
-        int turn = getTalkingTurn();
-        int nextTurn = (turn + 1) % players.length;
-
-        while(nextTurn != turn){
-            if(players[nextTurn].isAlive() && players[nextTurn].canSpeak()){
-                talkingTurn = nextTurn;
-                return;
-            }
-
-            nextTurn = (nextTurn + 1) % players.length;
-        }
-    }
 
     // For saying last words after being killed
     public void setTalkingTurn(int talkingTurn){
@@ -119,8 +106,22 @@ public class Game implements Cloneable{
 
     }
 
-    public int checkTurn(int playerNumber){
+    public void changeTurn(){
+        int turn = getTalkingTurn();
+        int nextTurn = (turn + 1) % players.length;
 
+        while(nextTurn != turn){
+            if(players[nextTurn].isAlive() && players[nextTurn].canSpeak()){
+                talkingTurn = nextTurn;
+                return;
+            }
+
+            nextTurn = (nextTurn + 1) % players.length;
+        }
+    }
+
+    public boolean checkTurn(int playerNumber){
+        return getTalkingTurn() == playerNumber;
     }
 
 //    TODO: Maybe we should return the index of the player and not the player itself
