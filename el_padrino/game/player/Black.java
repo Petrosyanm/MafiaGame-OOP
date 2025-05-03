@@ -27,4 +27,9 @@ public class Black extends Player{
             players[playerNumber].setVoteNumber(players[playerNumber].getVoteNumber() + 1);
         }
     }
+
+    @Override
+    public String toString(){
+        return "Black: " + super.toString();
+    }
 }

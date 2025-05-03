@@ -155,4 +155,20 @@ public class Game implements Cloneable{
             player.setVoteNumber(0);
         }
     }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("-Game State:\n");
+        sb.append("Nights: ").append(nights).append("\n");
+        sb.append("Reds: ").append(redsNumber).append(", Blacks: ").append(blacksNumber).append("\n");
+        sb.append("Talking Turn: Player #").append(talkingTurn).append("\n");
+
+        sb.append("-Players:\n");
+        for (Player player : players) {
+            sb.append(player).append("\n");
+        }
+
+        return sb.toString();
+    }
 }

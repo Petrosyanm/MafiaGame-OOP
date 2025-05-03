@@ -101,4 +101,14 @@ public class Player implements Cloneable{
     public boolean canSpeak(){
         return canSpeak;
     }
+
+    @Override
+    public String toString(){
+        return "Player #" + number +
+                " {Alive: " + isAlive +
+                ", Can Speak: " + canSpeak +
+                ", Remarks: " + remarksNumber +
+                ", Votes: " + voteNumber +
+                ", Message: " + (message != null ? message : "None") + "}";
+    }
 }

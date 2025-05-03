@@ -26,4 +26,9 @@ public class Sherif extends Player{
     public boolean findDon(int playerNumber, Player[] players){
         return players[playerNumber] instanceof Don;
     }
+
+    @Override
+    public String toString(){
+        return "Sherif: " + super.toString();
+    }
 }
