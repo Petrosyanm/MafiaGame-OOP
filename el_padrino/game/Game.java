@@ -42,32 +42,28 @@ public class Game implements Cloneable{
     }
 
     //Getters and Setters
-    public void setNights(){
-
+    public void setNights(int nights) {
+        this.nights = nights;
     }
 
-    public int getNights(){
+    public int getNights(){ return nights; }
 
+    public void setRedsNumber(int redsNumber){
+        this.redsNumber = redsNumber;
     }
 
-    public void setRedsNumber(){
+    public int getRedsNumber(){ return redsNumber; }
 
+    public void setBlacksNumber(int blacksNumber){
+        this.blacksNumber = blacksNumber;
     }
 
-    public int getRedsNumber(){
+    public int getBlacksNumber(){ return blacksNumber; }
 
-    }
-
-    public void setBlacksNumber(){
-
-    }
-
-    public int getBlacksNumber(){
-
-    }
-
-    public void setPlayers(){
-
+    public void setPlayers(Player[] players){
+        for (int i = 0; i < this.players.length; i++) {
+            this.players[i] = players[i];
+        }
     }
 
     public Player[] getPlayers() {
@@ -85,9 +81,7 @@ public class Game implements Cloneable{
         this.talkingTurn = talkingTurn;
     }
 
-    public int getTalkingTurn(){
-
-    }
+    public int getTalkingTurn(){ return talkingTurn; }
     
     //Functionality
     public boolean checkWinner(){
