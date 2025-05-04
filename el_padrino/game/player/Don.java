@@ -7,13 +7,17 @@ public class Don extends Black{
         super();
     }
 
+    public Don(int number){
+        super(number);
+    }
+
     //Functionality
     public boolean findSherif(int playerNumber, Player[] players){
-        return players[playerNumber] instanceof Don;
+        return players[playerNumber] instanceof Sherif;
     }
 
     @Override
     public String toString(){
-        return "Sherif: " + super.toString();
+        return "Don: " + super.toString();
     }
 }

@@ -11,6 +11,11 @@ public class Black extends Player{
         messageVisibility = false;
     }
 
+    public Black(int number){
+        super(number);
+        messageVisibility = false;
+    }
+
     //Setters and Getters
     public void setMessageVisibility(){
         messageVisibility = !messageVisibility;

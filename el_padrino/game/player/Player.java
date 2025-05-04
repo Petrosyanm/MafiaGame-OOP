@@ -21,7 +21,7 @@ public class Player implements Cloneable{
     }
     public Player(){
         PLAYERS_NUMBER++;
-        number = PLAYERS_NUMBER;
+        number = PLAYERS_NUMBER - 1;
         isAlive = true;
         remarksNumber = 0;
         voteNumber = 0;

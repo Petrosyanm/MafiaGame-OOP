@@ -13,6 +13,11 @@ public class Sherif extends Player{
         messageVisibility = false;
     }
 
+    public Sherif(int number){
+        super(number);
+        messageVisibility = false;
+    }
+
     //Setters and Getters
     public void setMessageVisibility(){
         messageVisibility = !messageVisibility;
