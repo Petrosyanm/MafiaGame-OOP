@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class UserDataManaging {
-    private static final String PATH_TO_DATA = "../../user/usersInfo.txt"; 
+    private static final String PATH_TO_DATA = "usersInfo.txt";
 
     public static void saveUser(User user) throws LogInRegisterException {
         if (userExists(user.getName()))

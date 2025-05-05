@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class RegisterLogIn {
-    private boolean showLoginWindow = false;
     public void startRegistration(){
         JFrame frame = new JFrame("Login Page");
         frame.setSize(400, 250); 
@@ -51,10 +50,12 @@ public class RegisterLogIn {
             return;
         }
         try {
-            User user = new User(username, userPassword);
+            User user = new User(username, userPassword, true);
             UserDataManaging.saveUser(user); 
             JOptionPane.showMessageDialog(frame, "Account created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-            showLoginWindow=true;
+            frame.dispose();
+            JoinCreateGame lobby = new JoinCreateGame();
+            lobby.showLobby(username);
         } catch (LogInRegisterException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -65,16 +66,22 @@ public class RegisterLogIn {
             return;
         }
         try {
-            User user = new User(username, userPassword);
+            User user = new User(username, userPassword, false);
             UserDataManaging.logIn(username,userPassword); 
             JOptionPane.showMessageDialog(frame, "You logged in successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-            showLoginWindow=true;
+            frame.dispose();
+            JoinCreateGame lobby = new JoinCreateGame();
+            lobby.showLobby(username);
         } catch (LogInRegisterException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } 
     }
-    public boolean getShowLoginWindow(){
-        return showLoginWindow;
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            RegisterLogIn registerLogIn = new RegisterLogIn();
+            registerLogIn.startRegistration(); //Write on one line??
+        });
     }
 }
 

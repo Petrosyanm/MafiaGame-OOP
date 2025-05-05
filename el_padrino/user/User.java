@@ -18,9 +18,11 @@ public class User{
         name = "User-" + ID;
         points = 0;
     }
-    public User(String name, String password){
-        USERS_NUMBER++;
-        setLastUserId(USERS_NUMBER);
+    public User(String name, String password, boolean creatingAccount){
+        if(creatingAccount){
+            USERS_NUMBER++;
+            setLastUserId(USERS_NUMBER);
+        }
         ID = USERS_NUMBER + "";
         this.password = password;
         this.name = name;
@@ -59,7 +61,7 @@ public class User{
 
 
     private static int getLastUserId() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("../../user/last_id.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("last_id.txt"))) {
             String line = reader.readLine();
             if(line != null)
                 return Integer.parseInt(line); 
@@ -71,7 +73,7 @@ public class User{
     }
 
     private static void setLastUserId(int id) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("../../user/last_id.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("last_id.txt"))) {
             writer.write(String.valueOf(id));
         } catch (IOException e) {
             System.out.println(e.getMessage());
