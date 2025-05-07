@@ -1,12 +1,15 @@
 package src.network;
 
+import game.Game;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 public class Server {
     private ServerSocket serverSocket;
-    private final List<PrintWriter> clientWriters = new ArrayList<>();
+    private final ArrayList<PrintWriter> clientWriters = new ArrayList<>();
+    private ArrayList<Game> activeGames = new ArrayList<>();
 
     public void start(int port) {
         try {

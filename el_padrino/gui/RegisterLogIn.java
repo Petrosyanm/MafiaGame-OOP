@@ -55,7 +55,7 @@ public class RegisterLogIn {
             JOptionPane.showMessageDialog(frame, "Account created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
             JoinCreateGame lobby = new JoinCreateGame();
-            lobby.showLobby(username);
+            lobby.showMainMenu(username);
         } catch (LogInRegisterException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -71,7 +71,7 @@ public class RegisterLogIn {
             JOptionPane.showMessageDialog(frame, "You logged in successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
             JoinCreateGame lobby = new JoinCreateGame();
-            lobby.showLobby(username);
+            lobby.showMainMenu(username);
         } catch (LogInRegisterException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } 

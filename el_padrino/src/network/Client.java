@@ -3,9 +3,11 @@ package src.network;
 import java.io.*;
 import java.net.*;
 
+
 public class Client {
     public void start(int worldCode) {
-        String localIP = IPAdress.getHostAddress()
+        System.out.println(worldCode);
+        String localIP = IPAdress.getPrivateIP();
         String serverIP = localIP.substring(0,localIP.lastIndexOf(".")) + worldCode;
         int port = 1234;
         

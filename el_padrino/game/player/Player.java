@@ -1,6 +1,10 @@
 package game.player;
 
-public class Player implements Cloneable{
+import java.io.Serializable;
+
+public class Player implements Cloneable, Serializable {
+    private static final long serialVersionUID = 1L;
+
     public static int PLAYERS_NUMBER;
     //Instance variables
     private int number;
