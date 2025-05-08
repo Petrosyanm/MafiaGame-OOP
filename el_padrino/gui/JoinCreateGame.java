@@ -55,8 +55,8 @@ public class JoinCreateGame {
                 client.start(Integer.parseInt(gameCode), username);
             }).start();
 
-            JLabel maxLabel = new JLabel("Max Players:");
-            JSpinner maxPlayers = new JSpinner(new SpinnerNumberModel(4, 2, 20, 1));
+            JLabel totalLabel = new JLabel("Total Players:");
+            JSpinner totalPlayers = new JSpinner(new SpinnerNumberModel(4, 2, 20, 1));
 
             JLabel blackLabel = new JLabel("Black Players:");
             JSpinner blackPlayers = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
@@ -64,15 +64,35 @@ public class JoinCreateGame {
             JButton createBtn = new JButton("Create");
 
             createBtn.addActionListener(e -> {
-                int max = (int) maxPlayers.getValue();
+                int players = (int) totalPlayers.getValue();
+                int blacks = (int) blackPlayers.getValue();
+
+                if (players < 4) {
+                    JOptionPane.showMessageDialog(frame, "Total players must be at least 4.", "Invalid Player Count", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                int maxAllowedBlacks = players / 2;
+
+                if(blacks > maxAllowedBlacks) {
+                    JOptionPane.showMessageDialog(
+                            frame,
+                            "Too many black players. Maximum number allowed is " + maxAllowedBlacks + " for " + players + " total players.",
+                            "Invalid Black Player Count",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+
                 frame.dispose();
-                new WaitingList(username, max);
+                new WaitingList(username, players);
             });
 
             frame.add(codeLabel);
             frame.add(new JLabel());
-            frame.add(maxLabel);
-            frame.add(maxPlayers);
+            frame.add(totalLabel);
+            frame.add(totalPlayers);
             frame.add(blackLabel);
             frame.add(blackPlayers);
             frame.add(new JLabel());
