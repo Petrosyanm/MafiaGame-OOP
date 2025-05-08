@@ -8,27 +8,27 @@ import java.awt.*;
 public class RegisterLogIn {
     public void startRegistration(){
         JFrame frame = new JFrame("Login Page");
-        frame.setSize(400, 250); 
+        frame.setSize(400, 250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JPanel userBox = new JPanel();
-        userBox.setLayout(new FlowLayout(FlowLayout.LEFT)); 
+        userBox.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel userLabel = new JLabel("Enter the username:");
-        JTextField user = new JTextField(20); 
+        JTextField user = new JTextField(20);
         userBox.add(userLabel);
         userBox.add(user);
-        
+
         JPanel passwordBox = new JPanel();
-        passwordBox.setLayout(new FlowLayout(FlowLayout.LEFT)); 
+        passwordBox.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel passLabel = new JLabel("Enter the password:");
-        JPasswordField password = new JPasswordField(20); 
+        JPasswordField password = new JPasswordField(20);
         passwordBox.add(passLabel);
         passwordBox.add(password);
 
         JPanel buttonBox = new JPanel();
-        buttonBox.setLayout(new FlowLayout(FlowLayout.CENTER)); 
+        buttonBox.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton createNewAccount = new JButton("Create new account");
         JButton logIn = new JButton("Log In to existing account");
         buttonBox.add(createNewAccount);
@@ -51,7 +51,7 @@ public class RegisterLogIn {
         }
         try {
             User user = new User(username, userPassword, true);
-            UserDataManaging.saveUser(user); 
+            UserDataManaging.saveUser(user);
             JOptionPane.showMessageDialog(frame, "Account created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
             JoinCreateGame lobby = new JoinCreateGame();
@@ -67,14 +67,14 @@ public class RegisterLogIn {
         }
         try {
             User user = new User(username, userPassword, false);
-            UserDataManaging.logIn(username,userPassword); 
+            UserDataManaging.logIn(username,userPassword);
             JOptionPane.showMessageDialog(frame, "You logged in successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
             JoinCreateGame lobby = new JoinCreateGame();
             lobby.showMainMenu(username);
         } catch (LogInRegisterException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } 
+        }
     }
 
     public static void main(String[] args) {

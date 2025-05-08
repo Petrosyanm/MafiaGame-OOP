@@ -1,20 +1,22 @@
 package src.network;
 
-import game.Game;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 public class Server {
     private ServerSocket serverSocket;
-    private final ArrayList<PrintWriter> clientWriters = new ArrayList<>();
-    private ArrayList<Game> activeGames = new ArrayList<>();
+    private final List<PrintWriter> clientWriters = Collections.synchronizedList(new ArrayList<>());
+    private final Map<PrintWriter, String> playerNames = Collections.synchronizedMap(new HashMap<>());
+    public String ip;
 
     public void start(int port) {
         try {
             serverSocket = new ServerSocket(port);
             System.out.println("Server started on port " + port);
+
+            this.ip = IPAdress.getPrivateIP();
+            System.out.println("Server IP: " + ip);
 
             while (true) {
                 Socket client = serverSocket.accept();
@@ -24,9 +26,12 @@ public class Server {
                 clientWriters.add(writer);
 
                 writer.println("Connected to Mafia Game server!");
+                writer.println("CONNECTED_PLAYERS: " + clientWriters.size());
 
                 new Thread(new ClientHandler(client, writer)).start();
+                // Removed: broadcast("A new player has joined.");
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,24 +47,44 @@ public class Server {
         }
 
         public void run() {
-            try (
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))
-            ) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                 String inputLine;
                 while ((inputLine = reader.readLine()) != null) {
                     System.out.println("Received: " + inputLine);
-                    broadcast("Client said: " + inputLine);
+
+                    if (inputLine.startsWith("USERNAME:")) {
+                        String username = inputLine.substring("USERNAME:".length()).trim();
+                        playerNames.put(out, username);
+                        broadcast("NEW_PLAYER:" + username);
+                        System.out.println("Registered username: " + username);
+                    } else {
+                        broadcast("Client said: " + inputLine);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                clientWriters.remove(out);
+                String name = playerNames.remove(out);
+                if (name != null) {
+                    broadcast("A player left: " + name);
+                }
+                broadcast("CONNECTED_PLAYERS: " + clientWriters.size());
             }
         }
     }
 
     private void broadcast(String message) {
-        for (PrintWriter writer : clientWriters) {
-            writer.println(message);
+        synchronized (clientWriters) {
+            for (PrintWriter writer : clientWriters) {
+                writer.println(message);
+            }
+
+            // Send player count to all
+            String countMsg = "CONNECTED_PLAYERS: " + clientWriters.size();
+            for (PrintWriter writer : clientWriters) {
+                writer.println(countMsg);
+            }
         }
     }
-
 }

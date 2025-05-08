@@ -1,24 +1,21 @@
-
 package gui;
 
 import game.Game;
-import game.GameStorage;
 import game.player.Player;
 import src.network.*;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class JoinCreateGame {
-    private ArrayList<Game> activeGames = GameStorage.loadGames();
-    private String username; // username to be passed to inner classes
+    private String username;
 
     public void showMainMenu(String username) {
         this.username = username;
         JFrame frame = new JFrame("Choose Game Mode");
         frame.setSize(300, 150);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout(2, 1));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
         JButton createButton = new JButton("Create Game");
@@ -27,17 +24,7 @@ public class JoinCreateGame {
         createButton.addActionListener(e -> {
             frame.dispose();
             Server server = new Server();
-
-            (new Thread() {
-                public void run() {
-                    try {
-                        System.out.println("Server");
-                        server.start(1234);
-                    } catch(Exception v) {
-                        System.out.println(v);
-                    }
-                }
-            }).start();
+            new Thread(() -> server.start(1234)).start();
             new CreateGameWindow().show();
         });
 
@@ -54,23 +41,21 @@ public class JoinCreateGame {
     private class CreateGameWindow {
         public void show() {
             JFrame frame = new JFrame("Create Game");
-            frame.setSize(350, 200);
-            frame.setLayout(new GridLayout(3, 2));
+            frame.setSize(350, 250);
+            frame.setLayout(new GridLayout(4, 2));
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setLocationRelativeTo(null);
-            String localIP = IPAdress.getPrivateIP();
 
-            Client client = new Client();
-            (new Thread() {
-                public void run() {
-                    try {
-                        System.out.println("Client");
-                        int worldCode = Integer.parseInt(localIP.substring(localIP.lastIndexOf(".") + 1));
-                        client.start(worldCode);
-                    } catch(Exception v) {
-                        System.out.println(v);
-                    }
-                }
+            String localIP = IPAdress.getPrivateIP();
+            String gameCode = localIP.substring(localIP.lastIndexOf(".") + 1);
+
+            // Show game code to user
+            JLabel codeLabel = new JLabel("Game Code (Share this): " + gameCode);
+
+            // Start the host client
+            new Thread(() -> {
+                Client client = new Client();
+                client.start(Integer.parseInt(gameCode), username);
             }).start();
 
             JLabel maxLabel = new JLabel("Max Players:");
@@ -84,18 +69,13 @@ public class JoinCreateGame {
             createBtn.addActionListener(e -> {
                 int max = (int) maxPlayers.getValue();
                 int black = (int) blackPlayers.getValue();
-                int worldCode = Integer.parseInt(localIP.substring(localIP.lastIndexOf(".") + 1));
-                System.out.println("Creating game with " + max + " players and " + black + " black players, Code: " + worldCode);
-
-                Game game = new Game(max, black);
-                game.setGameCode(worldCode);
-                activeGames.add(game);
-                GameStorage.saveGames(activeGames);
 
                 frame.dispose();
                 new WaitingList(username, max);
             });
 
+            frame.add(codeLabel);
+            frame.add(new JLabel());  // filler
             frame.add(maxLabel);
             frame.add(maxPlayers);
             frame.add(blackLabel);
@@ -114,20 +94,6 @@ public class JoinCreateGame {
             frame.setLayout(new GridLayout(2, 2));
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setLocationRelativeTo(null);
-            String localIP = IPAdress.getPrivateIP();
-
-            Client client = new Client();
-            (new Thread() {
-                public void run() {
-                    try {
-                        System.out.println("Client");
-                        int worldCode = Integer.parseInt(localIP.substring(localIP.lastIndexOf(".") + 1));
-                        client.start(worldCode);
-                    } catch(Exception v) {
-                        System.out.println(v);
-                    }
-                }
-            }).start();
 
             JLabel codeLabel = new JLabel("Game Code:");
             JTextField codeField = new JTextField();
@@ -137,31 +103,26 @@ public class JoinCreateGame {
                 String codeText = codeField.getText().trim();
                 try {
                     int code = Integer.parseInt(codeText);
-                    Game selectedGame = null;
 
-                   for(Game game : activeGames){
-                       if(game.getGameCode() == code){
-                           selectedGame = game;
-                           break;
-                       }
-                   }
-
-                    if (selectedGame == null) {
-                        JOptionPane.showMessageDialog(frame, "No game found with that code.", "Error", JOptionPane.ERROR_MESSAGE);
-                        frame.dispose();
-                        new JoinGameWindow().show();
-                    } else {
-                        Player[] players = selectedGame.getPlayers();
-                        for (int i = 0; i < players.length; i++) {
-                            if (players[i] == null) {
-                                players[i] = new Player(i);
-                                break;
-                            }
+                    // Start client in a thread
+                    new Thread(() -> {
+                        try {
+                            Client client = new Client();
+                            client.start(code, username);
+                            Thread.sleep(1000); // wait a moment to receive data
+                            SwingUtilities.invokeLater(() ->
+                                    new WaitingList(username, Client.connectedPlayers)
+                            );
+                        } catch (Exception ex) {
+                            SwingUtilities.invokeLater(() -> {
+                                JOptionPane.showMessageDialog(frame, "No game found with that code.", "Error", JOptionPane.ERROR_MESSAGE);
+                                frame.dispose();
+                                new JoinGameWindow().show();
+                            });
                         }
-                        selectedGame.setPlayers(players);
-                        frame.dispose();
-                        new WaitingList(username, players.length);
-                    }
+                    }).start();
+
+                    frame.dispose();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame, "Please enter a valid number.", "Invalid Code", JOptionPane.WARNING_MESSAGE);
                 }

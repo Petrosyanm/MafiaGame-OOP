@@ -1,10 +1,11 @@
-
 package gui;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class WaitingList extends JFrame {
+    public static WaitingList instance;  // Allow static access from Client
+
     private JPanel playerPanel;
     private JLabel statusLabel;
     private int maxPlayers;
@@ -12,6 +13,7 @@ public class WaitingList extends JFrame {
 
     public WaitingList(String initialUsername, int maxPlayers) {
         this.maxPlayers = maxPlayers;
+        WaitingList.instance = this;  // Set static instance
 
         setTitle("Waiting Room");
         setSize(400, 300);

@@ -2,14 +2,10 @@
 package game;
 
 import game.player.*;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Game implements Cloneable, Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class Game implements Cloneable {
     private int nights;
     private int redsNumber;
     private int blacksNumber;

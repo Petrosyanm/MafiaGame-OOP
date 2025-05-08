@@ -57,15 +57,15 @@ public class User{
 
     public String toString() {
         return ID + "|" + name + "|" + password + "|" + points;
-    }   
+    }
 
 
     private static int getLastUserId() {
         try (BufferedReader reader = new BufferedReader(new FileReader("last_id.txt"))) {
             String line = reader.readLine();
             if(line != null)
-                return Integer.parseInt(line); 
-            else 
+                return Integer.parseInt(line);
+            else
                 return 0;
         } catch (IOException e) {
             return 0;

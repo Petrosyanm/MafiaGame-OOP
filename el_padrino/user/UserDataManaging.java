@@ -27,10 +27,10 @@ public class UserDataManaging {
             while ((line = r.readLine()) != null) {
                 String[] data = line.split("\\|");
                 if (data.length >= 4) {
-                    if (data[1].equals(name)) 
+                    if (data[1].equals(name))
                         if(data[2].equals(password))
                             return;
-                        else 
+                        else
                             throw new LogInRegisterException("Wrong password");
                 }
             }

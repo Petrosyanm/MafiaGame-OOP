@@ -6,7 +6,7 @@ import java.awt.*;
 public class GameWindow{
     public void startTheGame(){
         JFrame frame = new JFrame("Game Window");
-        frame.setSize(900, 900); 
+        frame.setSize(900, 900);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
