@@ -14,24 +14,19 @@ public class Server {
         try {
             serverSocket = new ServerSocket(port);
             System.out.println("Server started on port " + port);
-
-            this.ip = IPAdress.getPrivateIP();
-            System.out.println("Server IP: " + ip);
+            ip = IPAdress.getPrivateIP();
 
             while (true) {
                 Socket client = serverSocket.accept();
-                System.out.println("New client connected: " + client.getInetAddress());
-
                 PrintWriter writer = new PrintWriter(client.getOutputStream(), true);
                 clientWriters.add(writer);
 
+                writer.println("ROOM_ACTIVE"); // handshake
                 writer.println("Connected to Mafia Game server!");
                 writer.println("CONNECTED_PLAYERS: " + clientWriters.size());
 
                 new Thread(new ClientHandler(client, writer)).start();
-                // Removed: broadcast("A new player has joined.");
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,15 +45,17 @@ public class Server {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                 String inputLine;
                 while ((inputLine = reader.readLine()) != null) {
-                    System.out.println("Received: " + inputLine);
-
                     if (inputLine.startsWith("USERNAME:")) {
                         String username = inputLine.substring("USERNAME:".length()).trim();
                         playerNames.put(out, username);
+
+                        // Send existing players to the new client
+                        for (String existing : playerNames.values()) {
+                            out.println("NEW_PLAYER:" + existing);
+                        }
+
+                        // Inform everyone
                         broadcast("NEW_PLAYER:" + username);
-                        System.out.println("Registered username: " + username);
-                    } else {
-                        broadcast("Client said: " + inputLine);
                     }
                 }
             } catch (IOException e) {
@@ -66,9 +63,7 @@ public class Server {
             } finally {
                 clientWriters.remove(out);
                 String name = playerNames.remove(out);
-                if (name != null) {
-                    broadcast("A player left: " + name);
-                }
+                if (name != null) broadcast("A player left: " + name);
                 broadcast("CONNECTED_PLAYERS: " + clientWriters.size());
             }
         }
@@ -78,12 +73,7 @@ public class Server {
         synchronized (clientWriters) {
             for (PrintWriter writer : clientWriters) {
                 writer.println(message);
-            }
-
-            // Send player count to all
-            String countMsg = "CONNECTED_PLAYERS: " + clientWriters.size();
-            for (PrintWriter writer : clientWriters) {
-                writer.println(countMsg);
+                writer.println("CONNECTED_PLAYERS: " + clientWriters.size());
             }
         }
     }

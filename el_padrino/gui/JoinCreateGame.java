@@ -48,11 +48,8 @@ public class JoinCreateGame {
 
             String localIP = IPAdress.getPrivateIP();
             String gameCode = localIP.substring(localIP.lastIndexOf(".") + 1);
-
-            // Show game code to user
             JLabel codeLabel = new JLabel("Game Code (Share this): " + gameCode);
 
-            // Start the host client
             new Thread(() -> {
                 Client client = new Client();
                 client.start(Integer.parseInt(gameCode), username);
@@ -68,14 +65,12 @@ public class JoinCreateGame {
 
             createBtn.addActionListener(e -> {
                 int max = (int) maxPlayers.getValue();
-                int black = (int) blackPlayers.getValue();
-
                 frame.dispose();
                 new WaitingList(username, max);
             });
 
             frame.add(codeLabel);
-            frame.add(new JLabel());  // filler
+            frame.add(new JLabel());
             frame.add(maxLabel);
             frame.add(maxPlayers);
             frame.add(blackLabel);
@@ -103,19 +98,21 @@ public class JoinCreateGame {
                 String codeText = codeField.getText().trim();
                 try {
                     int code = Integer.parseInt(codeText);
-
-                    // Start client in a thread
+                    if (code < 0 || code > 255) {
+                        JOptionPane.showMessageDialog(frame, "Invalid game code. Must be between 0 and 255.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     new Thread(() -> {
                         try {
                             Client client = new Client();
                             client.start(code, username);
-                            Thread.sleep(1000); // wait a moment to receive data
+                            Thread.sleep(1000);
                             SwingUtilities.invokeLater(() ->
                                     new WaitingList(username, Client.connectedPlayers)
                             );
                         } catch (Exception ex) {
                             SwingUtilities.invokeLater(() -> {
-                                JOptionPane.showMessageDialog(frame, "No game found with that code.", "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "No game found at this code. Make sure the room is created first.", "Error", JOptionPane.ERROR_MESSAGE);
                                 frame.dispose();
                                 new JoinGameWindow().show();
                             });
@@ -132,7 +129,6 @@ public class JoinCreateGame {
             frame.add(codeField);
             frame.add(new JLabel());
             frame.add(joinBtn);
-
             frame.setVisible(true);
         }
     }

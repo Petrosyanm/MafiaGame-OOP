@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class WaitingList extends JFrame {
-    public static WaitingList instance;  // Allow static access from Client
+    public static WaitingList instance;
 
     private JPanel playerPanel;
     private JLabel statusLabel;
@@ -13,7 +13,7 @@ public class WaitingList extends JFrame {
 
     public WaitingList(String initialUsername, int maxPlayers) {
         this.maxPlayers = maxPlayers;
-        WaitingList.instance = this;  // Set static instance
+        WaitingList.instance = this;
 
         setTitle("Waiting Room");
         setSize(400, 300);
