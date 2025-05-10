@@ -4,9 +4,13 @@ import src.network.IPAdress;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WaitingList extends JFrame {
     public static WaitingList instance;
+
+    private static List<WaitingList> allWaitingWindows = new ArrayList<>();
 
     private JPanel playerPanel;
     private JLabel statusLabel;
@@ -17,6 +21,7 @@ public class WaitingList extends JFrame {
     public WaitingList(String initialUsername, int maxPlayers) {
         this.maxPlayers = maxPlayers;
         WaitingList.instance = this;
+        allWaitingWindows.add(this);
 
         String localIP = IPAdress.getPrivateIP();
         String gameCode = localIP.substring(localIP.lastIndexOf(".") + 1);
@@ -33,7 +38,7 @@ public class WaitingList extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-//        Title Label
+//         Title Label
         JLabel titleLabel = new JLabel("Waiting Room", SwingConstants.CENTER);
         titleLabel.setHorizontalTextPosition((int) CENTER_ALIGNMENT);
         titleLabel.setForeground(Color.WHITE);
@@ -49,7 +54,7 @@ public class WaitingList extends JFrame {
         add(statusLabel, gbc);
 
 
-//       Player Panel
+//         Player Panel
         playerPanel = new JPanel();
         playerPanel.setOpaque(false);
         playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
@@ -65,7 +70,8 @@ public class WaitingList extends JFrame {
         gbc.fill = GridBagConstraints.BOTH;
         add(scrollPane, gbc);
 
-//       Game Code Label
+
+//        Game Code Label
         codeLabel = new JLabel("Game Code: " + gameCode, SwingConstants.CENTER);
         codeLabel.setForeground(Color.GRAY);
         codeLabel.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -88,6 +94,7 @@ public class WaitingList extends JFrame {
                 BorderFactory.createEmptyBorder(6, 0, 6, 0),
                 BorderFactory.createLineBorder(new Color(50, 50, 70), 1)
         ));
+
 
 //        Name Label
         JLabel nameLabel = new JLabel("🧑 " + username);
@@ -116,8 +123,11 @@ public class WaitingList extends JFrame {
     private void startGame() {
         JOptionPane.showMessageDialog(this, "All players joined. Starting the game!");
         dispose();
+    }
 
-        GameWindow gameWindow = new GameWindow();
-        gameWindow.startTheGame();
+    public static void addPlayerToAll(String username) {
+        for (WaitingList w : allWaitingWindows) {
+            w.addPlayer(username);
+        }
     }
 }

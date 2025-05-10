@@ -181,20 +181,6 @@ public class JoinCreateGame {
             customizeSpinner(totalPlayers);
             inputPanel.add(totalPlayers);
 
-            // Black Players Label
-            JLabel blacksLabel = new JLabel("Black Players");
-            blacksLabel.setPreferredSize(labelSize);
-            blacksLabel.setForeground(Color.LIGHT_GRAY);
-            blacksLabel.setHorizontalAlignment(JLabel.LEFT);
-            inputPanel.add(blacksLabel);
-
-            // Black Players Spinner
-            JSpinner blacksSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
-            blacksSpinner.setPreferredSize(spinnerSize);
-            customizeSpinner(blacksSpinner);
-            inputPanel.add(blacksSpinner);
-
-
             inputPanel.add(Box.createVerticalStrut(20));
 
             // Create Button
@@ -228,7 +214,6 @@ public class JoinCreateGame {
 
             createButton.addActionListener(e -> {
                 int players = (int) totalPlayers.getValue();
-                int blacks = (int) blacksSpinner.getValue();
 
 //                Validation Logic
                 if (players < 4) {
@@ -237,16 +222,6 @@ public class JoinCreateGame {
                 }
 
                 int maxAllowedBlacks = players / 2;
-
-                if(blacks > maxAllowedBlacks) {
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "Too many black players. Maximum number allowed is " + maxAllowedBlacks + " for " + players + " total players.",
-                            "Invalid Black Player Count",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
 
                 int total = (int) totalPlayers.getValue();
                 frame.dispose();

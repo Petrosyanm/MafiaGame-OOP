@@ -1,9 +1,8 @@
-
 package game;
 
 import game.player.*;
-import java.util.ArrayList;
-import java.util.Random;
+
+import java.util.*;
 
 public class Game implements Cloneable {
     private int nights;
@@ -12,6 +11,12 @@ public class Game implements Cloneable {
     private Player[] players;
     private int talkingTurn;
     private int gameCode;
+
+    public boolean isNight = true;
+    public boolean isFirstNight = true;
+
+    private Set<Integer> mafiaPlayers = new HashSet<>();
+    private Map<Integer, Integer> mafiaVotes = new HashMap<>();
 
     public Game() {
         nights = 0;
@@ -30,39 +35,34 @@ public class Game implements Cloneable {
         this.blacksNumber = blacksNumber;
         players = new Player[playersNumber];
         for (int i = 0; i < players.length; i++) {
-            players[i] = null; // Initialize as null, players added on join
+            players[i] = null;
         }
         talkingTurn = 0;
     }
 
-    public void setNights(int nights) { this.nights = nights; }
-    public int getNights() { return nights; }
-
-    public void setRedsNumber(int redsNumber) { this.redsNumber = redsNumber; }
-    public int getRedsNumber() { return redsNumber; }
-
-    public void setBlacksNumber(int blacksNumber) { this.blacksNumber = blacksNumber; }
-    public int getBlacksNumber() { return blacksNumber; }
-
     public void setPlayers(Player[] players) {
-        for (int i = 0; i < this.players.length; i++) {
-            this.players[i] = players[i];
-        }
+        this.players = players;
     }
 
     public Player[] getPlayers() {
-        Player[] playersCopy = new Player[players.length];
-        for (int i = 0; i < players.length; i++) {
-            playersCopy[i] = players[i] == null ? null : players[i].clone();
-        }
-        return playersCopy;
+        return players;
     }
 
-    public void setTalkingTurn(int talkingTurn) { this.talkingTurn = talkingTurn; }
-    public int getTalkingTurn() { return talkingTurn; }
+    public void setTalkingTurn(int talkingTurn) {
+        this.talkingTurn = talkingTurn;
+    }
 
-    public void setGameCode(int gameCode) { this.gameCode = gameCode; }
-    public int getGameCode() { return gameCode; }
+    public int getTalkingTurn() {
+        return talkingTurn;
+    }
+
+    public void setGameCode(int gameCode) {
+        this.gameCode = gameCode;
+    }
+
+    public int getGameCode() {
+        return gameCode;
+    }
 
     public void distributeRoles() {
         ArrayList<Player> activePlayers = new ArrayList<>();
@@ -70,83 +70,82 @@ public class Game implements Cloneable {
             if (p != null) activePlayers.add(p);
         }
 
-        Random random = new Random();
-        for (int i = activePlayers.size() - 1; i > 0; i--) {
-            int j = random.nextInt(i + 1);
-            Player temp = activePlayers.get(i);
-            activePlayers.set(i, activePlayers.get(j));
-            activePlayers.set(j, temp);
-        }
+        Collections.shuffle(activePlayers, new Random());
 
-        for (int i = 0; i < activePlayers.size(); i++) {
+        int total = activePlayers.size();
+        int blackCount = Math.max(1, total / 3);
+        int redCount = total - blackCount - 1;
+
+        for (int i = 0; i < total; i++) {
             int num = activePlayers.get(i).getNumber();
-            if (i == 0) players[num] = new Sherif(num);
-            else if (i < redsNumber) players[num] = new Player(num);
-            else if (i < activePlayers.size() - 1) players[num] = new Black(num);
-            else players[num] = new Don(num);
-        }
-    }
 
-    public String checkRole(int playerNumber) {
-        if (playerNumber >= 0 && playerNumber < players.length) {
-            if (players[playerNumber] instanceof Sherif) return "Sherif";
-            if (players[playerNumber] instanceof Don) return "Don";
-            if (players[playerNumber] instanceof Black) return "Black";
-            return "Player";
-        }
-        return null;
-    }
-
-    public void changeTurn() {
-        int turn = getTalkingTurn();
-        int nextTurn = (turn + 1) % players.length;
-        while (nextTurn != turn) {
-            if (players[nextTurn].isAlive() && players[nextTurn].canSpeak()) {
-                talkingTurn = nextTurn;
-                return;
-            }
-            nextTurn = (nextTurn + 1) % players.length;
-        }
-    }
-
-    public boolean checkTurn(int playerNumber) {
-        return getTalkingTurn() == playerNumber;
-    }
-
-    public Player decideVictim() {
-        int maxVotes = 0;
-        ArrayList<Player> candidates = new ArrayList<>();
-        for (Player player : players) {
-            if (player == null) continue;
-            int votes = player.getVoteNumber();
-            if (votes > maxVotes) {
-                maxVotes = votes;
-                candidates.clear();
-                candidates.add(player);
-            } else if (votes == maxVotes) {
-                candidates.add(player);
+            if (i == 0) {
+                players[num] = new Sherif(num);
+            } else if (i <= redCount) {
+                players[num] = new Player(num);
+            } else if (i < total - 1) {
+                players[num] = new Black(num);
+                mafiaPlayers.add(num);
+            } else {
+                players[num] = new Don(num);
+                mafiaPlayers.add(num);
             }
         }
-        clearVotes();
-        return candidates.size() == 1 ? candidates.get(0) : null;
     }
 
-    public void clearVotes() {
-        for (Player player : players) {
-            if (player != null) player.setVoteNumber(0);
-        }
+    public String checkRole(int index) {
+        if (players[index] instanceof Sherif) return "Sherif";
+        if (players[index] instanceof Don) return "Don";
+        if (players[index] instanceof Black) return "Black";
+        return "Player";
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("-Game Code: ").append(gameCode).append("\n");
-        sb.append("Nights: ").append(nights).append("\n");
-        sb.append("Reds: ").append(redsNumber).append(", Blacks: ").append(blacksNumber).append("\n");
-        sb.append("Talking Turn: Player #").append(talkingTurn).append("\n");
-        sb.append("-Players:\n");
-        for (Player player : players) {
-            sb.append(player).append("\n");
+    public boolean isNight() {
+        return isNight;
+    }
+
+    public boolean isFirstNight() {
+        return isFirstNight;
+    }
+
+    public void startDayPhase() {
+        isNight = false;
+        isFirstNight = false;
+        mafiaVotes.clear();
+    }
+
+    public void startNightPhase() {
+        isNight = true;
+        mafiaVotes.clear();
+    }
+
+    public boolean isMafia(int playerIndex) {
+        return mafiaPlayers.contains(playerIndex);
+    }
+
+    public boolean registerMafiaVote(int mafiaPlayer, int target) {
+        if (!isMafia(mafiaPlayer)) return false;
+        if (mafiaVotes.containsKey(mafiaPlayer)) return false;
+        mafiaVotes.put(mafiaPlayer, target);
+        return true;
+    }
+
+    public Integer checkUnanimousVote() {
+        if (mafiaVotes.size() < mafiaPlayers.size()) return null;
+
+        int vote = -1;
+        for (int v : mafiaVotes.values()) {
+            if (vote == -1) vote = v;
+            else if (vote != v) return null;
         }
-        return sb.toString();
+        return vote;
+    }
+
+    public Set<Integer> getMafiaPlayers() {
+        return mafiaPlayers;
+    }
+
+    public Map<Integer, Integer> getMafiaVotes() {
+        return mafiaVotes;
     }
 }
